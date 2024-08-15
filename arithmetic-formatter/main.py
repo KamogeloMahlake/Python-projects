@@ -69,7 +69,6 @@ def main():
                 print(arithmetic_arranger(problems))
                 break
             else:
-                print("Enter YES(Y) or NO(N): ")
                 pass
 
 if __name__ == "__main__":
