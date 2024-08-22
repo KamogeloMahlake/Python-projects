@@ -38,5 +38,3 @@ def add_time(start, duration, day=False):
         return new_time + " " + f"({n} days later)"
     return new_time
 
-
-print(add_time("11:59 PM", "24:05", "Wednesday"))
