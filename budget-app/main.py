@@ -5,28 +5,48 @@ class Category:
         self.balance = 0
 
     def __str__(self) -> str:
-        return f"{self.balance}\n{self.ledger}"
+        topline = "*" * ((30 - len(self.item)) // 2) + self.item +  "*" * ((30 - len(self.item)) // 2)
+        for i in self.ledger:
+            if len(i["description"]) > 23:
+                
+
+        return topline
 
     def deposit(self, amount, description=False):
         if description:
             self.ledger.append({'amount': amount, "description": description})
         else:
-            self.ledger.append({"amount": amount})
+            self.ledger.append({'amount': amount})
         self.balance += amount
 
     def withdraw(self, amount, description=False):
-        if amount <= self.balance:
-            self.balance -= amount
-            amount -= (amount + amount)
+        if amount <= self.balance :
             if description:
-                self.ledger.append({"amount": amount, "description": description})
+                self.ledger.append({"amount": -amount, "description": description})
 
             else:
-                self.ledger.append({"amount": amount})
+                self.ledger.append({"amount": -amount})
+            self.balance -= amount
+            return True
+        
+        return False
+    
+    def get_balance(self):
+        return self.balance
+    
+    def transfer(self, amount, Category):
+        if amount <= self.balance:
+            self.balance -= amount
+            Category.balance += amount
+            self.ledger.append({"amount": amount, "description": f"Transfer to {Category.item}"})
+            Category.ledger.append({"amount": amount, "description": f"Transfer from {self.item}"})
             return True
         return False
 
-            
+    def check_funds(self, amount):
+        if amount > self.balance:
+            return False
+        return True 
 
 
 def create_spend_chart(categories):
@@ -34,5 +54,11 @@ def create_spend_chart(categories):
 
 food = Category("Food")
 food.deposit(1000, "deposit")
+food.withdraw(10.15, "groceries")
 food.withdraw(15.89, "restuarant and more food for dessert")
+clothing = Category("Clothing")
+food.transfer(50, clothing)
+eat = Category("Eat")
 print(food)
+print(clothing)
+print(eat)
