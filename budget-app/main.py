@@ -68,4 +68,5 @@ food.transfer(50, clothing)
 clothing.transfer(45, food)
 print(food)
 print(clothing)
+print(food.ledger)
 
