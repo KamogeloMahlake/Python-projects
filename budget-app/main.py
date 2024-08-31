@@ -5,34 +5,29 @@ class Category:
         self.balance = 0
 
     def __str__(self) -> str:
-        topline = "*" * ((30 - len(self.item)) // 2) + self.item +  "*" * ((30 - len(self.item)) // 2)
+        topline = self.item.center(30, "*")
         items = []
         for i in self.ledger:
             if len(i["description"]) > 23:
-                description = f"{i['description'].replace(i['description'][23-len(i['description']):], '')}{i['amount']:7}"
+                description = f"{i['description'].replace(i['description'][23-len(i['description']):], '')}{i['amount']:7.2f}"
                 items.append(description)
             else:
                 spaces = (23 - len(i['description'])) * " "
-                description = f"{i['description']}{spaces}{i['amount']:7}"
+                description = f"{i['description']}{spaces}{i['amount']:7.2f}"
                 items.append(description)
+        if "deposit" in items[0]:
+            items[0] = (f"initial deposit        {self.ledger[0]['amount']:7.2f}")
         final_output = "\n".join(items)
-        total = f"Total: {self.balance}"
+        total = f"Total: {self.balance:.2f}"
         return f"{topline}\n{final_output}\n{total}"
 
-    def deposit(self, amount, description=False):
-        if description:
-            self.ledger.append({'amount': amount, "description": description})
-        else:
-            self.ledger.append({'amount': amount})
+    def deposit(self, amount, description=''):
+        self.ledger.append({'amount': amount, "description": description})
         self.balance += amount
 
-    def withdraw(self, amount, description=False):
-        if amount <= self.balance :
-            if description:
-                self.ledger.append({"amount": -amount, "description": description})
-
-            else:
-                self.ledger.append({"amount": -amount})
+    def withdraw(self, amount, description=''):
+        if self.check_funds(amount):
+            self.ledger.append({"amount": -amount, "description": description})
             self.balance -= amount
             return True
         
@@ -42,11 +37,10 @@ class Category:
         return self.balance
     
     def transfer(self, amount, Category):
-        if amount <= self.balance:
+        if self.check_funds(amount):
             self.balance -= amount
-            Category.balance += amount
+            Category.deposit(amount, f"Transfer from {self.item}")
             self.ledger.append({"amount": -amount, "description": f"Transfer to {Category.item}"})
-            Category.ledger.append({"amount": amount, "description": f"Transfer from {self.item}"})
             return True
         return False
 
@@ -57,16 +51,14 @@ class Category:
 
 
 def create_spend_chart(categories):
-    pass
+    for c in categories:
+        pass
 
 food = Category("Food")
-food.deposit(1000, "deposit")
+food.deposit(1000, 'deposit')
 food.withdraw(10.15, "groceries")
 food.withdraw(15.89, "restuarant and more food for dessert")
 clothing = Category("Clothing")
 food.transfer(50, clothing)
-clothing.transfer(45, food)
 print(food)
-print(clothing)
-print(food.ledger)
-
+print(clothing.ledger)
