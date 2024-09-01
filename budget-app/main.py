@@ -9,14 +9,12 @@ class Category:
         items = []
         for i in self.ledger:
             if len(i["description"]) > 23:
-                description = f"{i['description'].replace(i['description'][23-len(i['description']):], '')}{i['amount']:7.2f}"
+                description = f"{i['description'][:23]}{i['amount']:7.2f}"
                 items.append(description)
             else:
                 spaces = (23 - len(i['description'])) * " "
                 description = f"{i['description']}{spaces}{i['amount']:7.2f}"
                 items.append(description)
-        if "deposit" in items[0]:
-            items[0] = (f"initial deposit        {self.ledger[0]['amount']:7.2f}")
         final_output = "\n".join(items)
         total = f"Total: {self.balance:.2f}"
         return f"{topline}\n{final_output}\n{total}"
@@ -51,8 +49,46 @@ class Category:
 
 
 def create_spend_chart(categories):
-    for c in categories:
-        pass
+    chart = 'Percentage spent by category\n'
+    spending = {}
+    percentage = {}
+    total_spending = 0
+
+    for category in categories:
+        spent = abs(sum(i['amount'] for i in category.ledger if i['amount'] < 0))
+        spending[category.item] = round(spent, 2)
+
+    total_spending += sum(spending.values())
+    for i in spending:
+        percentage[i] = int(round(spending[i] / total_spending, 2) * 100)
+    
+    for i in range(100, -1, -10):
+        chart += f"{i}".rjust(3) + "|"
+        for percent in percentage.values():
+            if percent >= i:
+                chart += " o "
+            else:
+                chart += "   "
+        chart += "\n"
+
+    chart += ' ' * 4 + "-" * (len(percentage.values()) * 3 + 1)
+    chart += "\n     "
+    max_length = max([len(i) for i in list(percentage.keys())])
+
+    for i in range(max_length):
+        for name in list(percentage.keys()):
+            if len(name) > i:
+                chart += name[i] + "  "
+            else:
+                chart += "   "
+        if i < max_length - 1:
+            chart += "\n     "
+    return chart
+
+        
+
+
+
 
 food = Category("Food")
 food.deposit(1000, 'deposit')
@@ -60,5 +96,5 @@ food.withdraw(10.15, "groceries")
 food.withdraw(15.89, "restuarant and more food for dessert")
 clothing = Category("Clothing")
 food.transfer(50, clothing)
-print(food)
-print(clothing.ledger)
+clothing.withdraw(50)
+print(create_spend_chart([food, clothing]))
