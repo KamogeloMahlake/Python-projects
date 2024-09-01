@@ -24,22 +24,52 @@ def main():
         choice = int(input("Enter the code: "))
         try:
             if choice == 1:
-                tasks.append(create_task())
+                task = input("Enter the task: ")
+                while True:
+                    try:
+                        date_due = date.fromisoformat(input("Enter due date(YYYY-MM-DD): "))
+                        break
+                    except ValueError:
+                        pass
+                tasks.append(create_task(task, date_due))
+
                 for i, task in enumerate(tasks):
                     task['code'] = i
+                for i in tasks:
+                    i['days remaining'] = __sub__(i['date due'], i['date created']).days
             elif choice == 2:
-                print("TASKS")
+                print("\nTASKS")
                 print(view_tasks(tasks))
             
             elif choice == 3:
                 print(view_tasks(tasks))
-                tasks = update(tasks)
+                while True:
+                    try:
+                        enter_code = input("Enter code: ")
+                        x = input("1. Edit task\n2. Edit date due\n3. Edit status\nChoose an option: ")
+                        if x == "1":
+                            value = input("Enter new task:")
+                            tasks = update(tasks, enter_code, x, value)
+                        elif x == "2":
+                            value = input("Enter new due date(YYYY-MM-DD): ")
+                            tasks = update(tasks, enter_code, x, value)
+
+                        elif x == "3":
+                            tasks = update(tasks, enter_code, x)
+                        break
+                    except ValueError:
+                        pass
                 print(view_tasks(tasks))
 
             elif choice == 4:
                 print(view_tasks(tasks))
-                tasks = delete(tasks)
-                print(view_tasks(tasks))
+                while True:
+                    try:
+                        enter_code = input("Enter code: ")
+                        tasks = delete(tasks)
+                        break
+                    except ValueError:
+                        pass
 
             elif choice == 5:
                 name = input('Enter the name of file: ') + '.csv'
@@ -60,57 +90,41 @@ def main():
             print("Digits only")
             pass
 
-def delete(tasks):
-    try:
-        enter_code = input("Enter code: ")
-        new_tasks = [i for i in tasks if int(enter_code) != i['code']]
-        return new_tasks
-    except ValueError:
-        pass
+def delete(tasks, code):
+    new_tasks = [i for i in tasks if int(code) != i['code']]
+    return new_tasks
 
 def view_tasks(tasks):
     header = ['code', 'date created', 'date due', 'days remaining', 'task', 'status']
     rows = [i.values() for i in tasks]
     return tabulate(rows, header, tablefmt="rounded_outline")
 
-def create_task():
+def create_task(task, date_due):
     date_created = date.today()
-    task = input("Enter the task: ")
-    while True:
-        try:
-            date_due = date.fromisoformat(input("Enter due date(YYYY-MM-DD): "))
-            break
-        except ValueError:
-            pass
     status = "In-progress"
     code = ''
-    days_remaining = __sub__(date_due, date_created).days
+    days_remaining = ""
     return {'code': code, 'date created': date_created, 'date due': date_due, 'days remaining': days_remaining,
              'task': task, 'status': status}
 
-def update(tasks):
-    try: 
-        enter_code = input("Enter code: ")
-        x = input("1. Edit task\n2. Edit date due\n3. Edit status\nChoose an option: ")
-        for i in tasks:
-            if int(enter_code) == i['code']:
-                if x  == '1':
-                    i['task'] = input('Input updated task: ')
-                elif x == '2':
-                    while True:
-                        try:
-                            i['date due'] = date.fromisoformat(input("Enter new due date(YYYY-MM-DD): "))
-                            i['days remaining'] = __sub__(i['date due'], i['date created'])
-                            break
-                        except ValueError:
-                            pass
-                elif x == '3':
-                    i['status'] = 'Done'
-                    i['days remaining'] = '--------'
-                return tasks
+def update(tasks, code, choice, new_value=""):
+    for i in tasks:
+        if int(code) == i['code']:
+            if choice  == '1':
+                i['task'] = new_value
+            elif choice == '2':
+                while True:
+                    try:
+                        i['date due'] = date.fromisoformat(new_value)
+                        i['days remaining'] = __sub__(i['date due'], i['date created']).days
+                        break
+                    except ValueError:
+                         pass
+            elif choice == '3':
+                i['status'] = 'Done'
+                i['days remaining'] = '--------'
+            return tasks
         return tasks
-    except ValueError:
-        pass
             
 def menu():
     table = [
