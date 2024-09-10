@@ -66,7 +66,7 @@ def main():
                 while True:
                     try:
                         enter_code = input("Enter code: ")
-                        tasks = delete(tasks)
+                        tasks = delete(tasks, enter_code)
                         break
                     except ValueError:
                         pass
@@ -123,8 +123,7 @@ def update(tasks, code, choice, new_value=""):
             elif choice == '3':
                 i['status'] = 'Done'
                 i['days remaining'] = '--------'
-            return tasks
-        return tasks
+    return tasks
             
 def menu():
     table = [
