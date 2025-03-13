@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def calculate(numbers):
     if len(numbers) < 9:
         raise ValueError("List must contain nine numbers.")
@@ -7,7 +8,7 @@ def calculate(numbers):
     else:
         array = np.array(numbers)
         matrix = np.reshape(array, (3, 3))
-        
+
         mean_row = matrix.mean(axis=1)
         mean_col = matrix.mean(axis=0)
         mean_flat = matrix.mean()
@@ -33,11 +34,10 @@ def calculate(numbers):
         sum_flat = matrix.sum()
 
         return {
-            'mean': [list(mean_col), list(mean_row), mean_flat], 
-            'variance': [list(var_col), list(var_row), var_flat], 
-            'standard deviation': [list(std_col), list(std_row), std_flat], 
-            'max': [list(max_col), list(max_row), max_flat], 
-            'min': [list(min_col), list(min_row), min_flat], 
-            'sum': [list(sum_col), list(sum_row), sum_flat],
+            "mean": [list(mean_col), list(mean_row), mean_flat],
+            "variance": [list(var_col), list(var_row), var_flat],
+            "standard deviation": [list(std_col), list(std_row), std_flat],
+            "max": [list(max_col), list(max_row), max_flat],
+            "min": [list(min_col), list(min_row), min_flat],
+            "sum": [list(sum_col), list(sum_row), sum_flat],
         }
-

@@ -5,11 +5,11 @@ def arithmetic_arranger(problems, show_answers=False):
     answer = []
     output = []
     if len(problems) > 5:
-        return 'Error: Too many problems.'
+        return "Error: Too many problems."
     else:
         try:
             for i in problems:
-                x, op, y =i.split()
+                x, op, y = i.split()
                 length = max(len(x), len(y)) + 2
                 if op not in ["+", "-", "*", "/"]:
                     return f"Error: Operator must be '+' ,'-', '*', '/'."
@@ -22,7 +22,7 @@ def arithmetic_arranger(problems, show_answers=False):
                     y = int(y)
                     top.append(f"{x:{length}}")
                     bottom.append(f"{op} {y:{length - 2}}")
-                    line.append('-' * length)
+                    line.append("-" * length)
                     if show_answers == True:
                         match op:
                             case "+":
@@ -36,7 +36,7 @@ def arithmetic_arranger(problems, show_answers=False):
                                     ans = x / y
                                 except ZeroDivisionError:
                                     return f"cannot divide by zero"
-                        answer.append(f"{ans: {length}}") 
+                        answer.append(f"{ans: {length}}")
         except ValueError:
             return f"Error: Incorrect Format, for example 'x + y'."
     output.append("    ".join(top))
@@ -44,10 +44,11 @@ def arithmetic_arranger(problems, show_answers=False):
     output.append("    ".join(line))
     if show_answers == True:
         output.append("    ".join(answer))
-    return "\n".join(output) 
+    return "\n".join(output)
+
 
 def main():
-    problems = [] 
+    problems = []
     try:
         i = int(input("Input how many problems you want to enter: "))
         while i > 0:
@@ -57,7 +58,6 @@ def main():
     except ValueError:
         print("Enter correct number: ")
         pass
-
 
     else:
         while True:
@@ -71,6 +71,6 @@ def main():
             else:
                 pass
 
+
 if __name__ == "__main__":
     main()
-    

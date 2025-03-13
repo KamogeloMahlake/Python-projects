@@ -1,7 +1,14 @@
 def add_time(start, duration, day=False):
-    am_or_pm = {"AM":"PM", "PM":"AM"}
-    days_of_the_week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-
+    am_or_pm = {"AM": "PM", "PM": "AM"}
+    days_of_the_week = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+    ]
 
     start_hours_minutes, am_pm = start.split(" ")
     start_hours, start_minutes = start_hours_minutes.split(":")
@@ -14,7 +21,7 @@ def add_time(start, duration, day=False):
     if end_minutes >= 60:
         end_minutes = end_minutes % 60
         start_hours += 1
-    
+
     n = int((start_hours + duration_hours) / 24)
     number_of_flips = int((start_hours + duration_hours) / 12)
     end_hours = (start_hours + duration_hours) % 12
@@ -37,4 +44,3 @@ def add_time(start, duration, day=False):
     elif n > 1:
         return new_time + " " + f"({n} days later)"
     return new_time
-
