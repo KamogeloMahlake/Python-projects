@@ -10,6 +10,9 @@ from functools import partial
 
 
 class TextEditor:
+    fonts = ["Arial", "Courier", "Times New Roman", "Roman", "Comic Sans"]
+    font_sizes = [10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+
     def __init__(self):
         self.current_file_path = ""
         self.current_font = "Arial"
@@ -39,8 +42,7 @@ class TextEditor:
         self.formatmenu.add_cascade(label="Font", menu=self.font)
         self.font_size = Menu(self.formatmenu)
         self.formatmenu.add_cascade(label="Font Size", menu=self.font_size)
-        self.fonts = ["Arial", "Courier", "Times New Roman", "Roman", "Comic Sans"]
-        self.font_sizes = [10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+        
 
         for font in self.fonts:
             self.font.add_command(label=font, command=partial(self.__font, font))
@@ -87,10 +89,6 @@ class TextEditor:
                 file.write(self.text.get(1.0, tk.END))
                 self.__update_title(path)
                 self.current_file_path = path
-
-        else:
-            self.__save_as()
-        return
 
     def __font(self, font):
         self.text.config(font=(font, self.current_font_size))
